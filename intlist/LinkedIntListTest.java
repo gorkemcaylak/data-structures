@@ -83,6 +83,7 @@ public class LinkedIntListTest {
         LinkedIntList.extend(A, B);
         assertEquals(exp, A);
         assertEquals(exp, B);
+
     }
 
     /** concatenated: test general functionality. */

@@ -44,6 +44,19 @@ public class LinkedIntList {
     // Note that lowercase variable names are ListNodes while uppercase
     // variable names are LinkedIntLists.
 
+    /** Return a new LinkedIntList with the given ListNode. */
+    private static ListNode getBack(LinkedIntList L) {
+        ListNode temp;
+        if (L.front == null || L.front.next == null) {
+            return L.front;
+        }
+        temp = L.front.next;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        return temp;
+    }
+
     /** Squares all of the integers in the list L. Destructive. */
     public static void square(LinkedIntList L) {
         if (L != null) {
@@ -98,8 +111,24 @@ public class LinkedIntList {
 
     /** Moves the first integer to the back of the list. */
     public static void firstToLast(LinkedIntList L) {
-        // TODO: your code here
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // 09/27/2019 gorkem
+        if (L.front == null || L.front.next == null) {
+            return;
+        }
+        ListNode temp = L.front; //save old front to be moved
+        L.front = L.front.next; //move the front to 2nd
+        /*
+        ListNode p = L.front;
+        while (p.next != null) {
+            p = p.next;
+        }
+        p.next = temp;
+        p.next.next = null;
+
+         */
+        ListNode p = getBack(L);
+        p.next = temp;
+        p.next.next = null;
     }
 
     /**
@@ -107,8 +136,14 @@ public class LinkedIntList {
      * use 'new'.
      */
     public static void extend(LinkedIntList A, LinkedIntList B) {
-        // TODO: your code here
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // 09/27/2019 gorkem
+        ListNode p = getBack(A);
+        if (p == null) {
+            A.front = B.front;
+        }
+        else if ( B.front != null) {
+            p.next = B.front;
+        }
     }
 
     /**
@@ -117,7 +152,22 @@ public class LinkedIntList {
      */
     public static LinkedIntList concatenated(LinkedIntList A, LinkedIntList B) {
         // TODO: your code here
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (A == null) {
+            return B;
+        }
+        if (B == null) {
+            return A;
+        }
+        LinkedIntList C = new LinkedIntList(A.front.data);
+        ListNode temp = A.front;
+        while (temp.next != null) {
+            throw new UnsupportedOperationException("Not implemented yet.");
+        }
+        temp = B.front;
+        while (temp.next != null) {
+            throw new UnsupportedOperationException("Not implemented yet.");
+        }
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     // You don't need to look at or understand the methods below this comment.
