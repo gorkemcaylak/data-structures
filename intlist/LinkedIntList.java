@@ -124,7 +124,6 @@ public class LinkedIntList {
         }
         p.next = temp;
         p.next.next = null;
-
          */
         ListNode p = getBack(L);
         p.next = temp;
@@ -141,9 +140,19 @@ public class LinkedIntList {
         if (p == null) {
             A.front = B.front;
         }
-        else if ( B.front != null) {
+        else if (B.front != null) {
             p.next = B.front;
         }
+    }
+
+    public static void extendWithData(LinkedIntList A, int B) {
+        // 09/27/2019 gorkem
+        ListNode p = getBack(A);
+        ListNode temp = new ListNode(B);
+        if (p == null) {
+            A.front = temp;
+        }
+        p.next = temp;
     }
 
     /**
@@ -151,23 +160,24 @@ public class LinkedIntList {
      * of B. May NOT modify items of A or B. Use 'new'.
      */
     public static LinkedIntList concatenated(LinkedIntList A, LinkedIntList B) {
-        // TODO: your code here
-        if (A == null) {
+        if (A.front == null) {
             return B;
         }
-        if (B == null) {
+        if (B.front == null) {
             return A;
         }
         LinkedIntList C = new LinkedIntList(A.front.data);
-        ListNode temp = A.front;
-        while (temp.next != null) {
-            throw new UnsupportedOperationException("Not implemented yet.");
+        ListNode temp = A.front.next;
+        while (temp != null) {
+            extendWithData(C, temp.data);
+            temp = temp.next;
         }
         temp = B.front;
-        while (temp.next != null) {
-            throw new UnsupportedOperationException("Not implemented yet.");
+        while (temp != null) {
+            extendWithData(C, temp.data);
+            temp = temp.next;
         }
-        //throw new UnsupportedOperationException("Not implemented yet.");
+        return C;
     }
 
     // You don't need to look at or understand the methods below this comment.
