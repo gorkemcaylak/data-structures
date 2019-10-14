@@ -4,12 +4,12 @@ import edu.princeton.cs.algs4.In;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class BinaryRangeSearchTest {
 
-    private static Autocomplete linearAuto;
-    private static Autocomplete binaryAuto;
+    private static Autocomplete lAuto;
+    private static Autocomplete bAuto;
 
     private static int N = 0;
     private static Term[] terms = null;
@@ -36,8 +36,8 @@ public class BinaryRangeSearchTest {
             terms[i] = new Term(query, weight);
         }
 
-        linearAuto = new LinearRangeSearch(terms);
-        binaryAuto = new BinaryRangeSearch(terms);
+        lAuto = new LinearRangeSearch(terms);
+        bAuto = new BinaryRangeSearch(terms);
     }
 
     /**
@@ -52,6 +52,114 @@ public class BinaryRangeSearchTest {
             assertEquals(e.weight(), a.weight());
         }
     }
+
+    @Test
+    public void testRandomized() {
+        assertTermsEqual(bAuto.allMatches("İst"), lAuto.allMatches("İst"));
+        assertTermsEqual(bAuto.allMatches("Cann"), lAuto.allMatches("Cann"));
+
+        assertTermsEqual(bAuto.allMatches("au"), lAuto.allMatches("au"));
+        assertTermsEqual(bAuto.allMatches(" "), lAuto.allMatches(" "));
+        assertTermsEqual(bAuto.allMatches("tt"), lAuto.allMatches("tt"));
+        //  assertTermsEqual(binaryAuto.allMatches("Be"), linearAuto.allMatches("Be"));
+
+        // assertTermsEqual(binaryAuto.allMatches("Da"), linearAuto.allMatches("Da"));
+        assertTermsEqual(bAuto.allMatches("Dallas"), lAuto.allMatches("Dallas"));
+        assertTermsEqual(bAuto.allMatches("Dal"), lAuto.allMatches("Dal"));
+        assertTermsEqual(bAuto.allMatches("Sqx"), lAuto.allMatches("Sqx"));
+        assertTermsEqual(bAuto.allMatches("Pari"), lAuto.allMatches("Pari"));
+
+        assertTermsEqual(bAuto.allMatches("Kalamanaamanakananamajja"), lAuto.allMatches("Kalamanaamanakananamajja"));
+        assertTermsEqual(bAuto.allMatches("Nic"), lAuto.allMatches("Nic"));
+        assertTermsEqual(bAuto.allMatches("Iz"), lAuto.allMatches("Iz"));
+        assertTermsEqual(bAuto.allMatches("Berlin, "), lAuto.allMatches("Berlin, "));
+
+    }
+
+    @Test
+    public void testSimpleExampleLinear() {
+        Term[] moreTerms = new Term[] {
+                new Term("hello", 0),
+                new Term("world", 0),
+                new Term("welcome", 0),
+                new Term("to", 0),
+                new Term("autocomplete", 0),
+                new Term("me", 0)
+        };
+        LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
+        Term[] expected = new Term[]{new Term("autocomplete", 0)};
+        assertTermsEqual(expected, lrs.allMatches("auto"));
+    }
+
+    @Test
+    public void testSimpleExampleLinear2() {
+        Term[] moreTerms = new Term[] {
+                new Term("autobahn", 5),
+                new Term("world", 0),
+                new Term("welcome", 0),
+                new Term("automatic", 2),
+                new Term("autocomplete", 19),
+                new Term("me", 0)
+        };
+        LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
+        BinaryRangeSearch brs = new BinaryRangeSearch(moreTerms);
+        Term[] expected = new Term[]{new Term("autocomplete", 19), new Term("autobahn", 5), new Term("automatic", 2)};
+        assertTermsEqual(expected, lrs.allMatches("auto"));
+        assertTermsEqual(expected, brs.allMatches("auto"));
+    }
+
+    @Test
+    public void testSimpleCompared() {
+        Term[] moreTerms = new Term[] {
+                new Term("autobahn", 5),
+                new Term("world", 0),
+                new Term("welcome", 0),
+                new Term("automatic", 2),
+                new Term("autocomplete", 19),
+                new Term("me", 0)
+        };
+        LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
+        BinaryRangeSearch brs = new BinaryRangeSearch(moreTerms);
+        // Term[] expected = new Term[]{new Term("autocomplete", 19), new Term("autobahn", 5),new Term("automatic", 2)};
+        assertTermsEqual(brs.allMatches("au"), lrs.allMatches("au"));
+    }
+
+    @Test
+    public void testSimpleCompared2() {
+        Term[] moreTerms = new Term[] {
+                new Term("autobahn", 5),
+                new Term("world", 0),
+                new Term("welcome", 0),
+                new Term("automatic", 2),
+                new Term("autocomp", 19),
+                new Term("me", 0),
+                new Term(" ", 0),
+                new Term("auu", 12)
+        };
+        LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
+        BinaryRangeSearch brs = new BinaryRangeSearch(moreTerms);
+        Term[] expected = new Term[]{new Term("autocomp", 19), new Term("auu", 12), new Term("autobahn", 5), new Term("automatic", 2)};
+        assertTermsEqual(expected, lrs.allMatches("au"));
+        assertTermsEqual(brs.allMatches("au"), lrs.allMatches("au"));
+    }
+
+    @Test
+    public void testSimpleCompared3() {
+        Term[] moreTerms = new Term[] {
+                new Term("autobahn", 5),
+                new Term("world", 0),
+                new Term("welcome", 0),
+                new Term("automatic", 2),
+                new Term("autocomplete", 19),
+                new Term("me", 0),
+                new Term(" ", 0),
+                new Term("auu", 12)
+        };
+        LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
+        BinaryRangeSearch brs = new BinaryRangeSearch(moreTerms);
+        assertTermsEqual(brs.allMatches(" "), lrs.allMatches(" "));
+    }
+
 
     @Test
     public void testSimpleExample() {

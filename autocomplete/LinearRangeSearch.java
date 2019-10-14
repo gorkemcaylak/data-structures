@@ -1,7 +1,11 @@
 package autocomplete;
 
+import java.util.Arrays;
+
 public class LinearRangeSearch implements Autocomplete {
-    // TODO: add fields as necessary
+    private int length;
+    private static Term[] terms;
+    private static TermComparators termComp;
 
     /**
      * Validates and stores the given array of terms.
@@ -10,8 +14,14 @@ public class LinearRangeSearch implements Autocomplete {
      * @throws IllegalArgumentException if terms is null or contains null
      */
     public LinearRangeSearch(Term[] terms) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        if (terms == null) {
+            throw new IllegalArgumentException();
+        }
+        else if (Arrays.asList(terms).contains(null)) {
+            throw new IllegalArgumentException();
+        }
+        this.terms = terms;
+        this.length = terms.length;
     }
 
     /**
@@ -19,8 +29,27 @@ public class LinearRangeSearch implements Autocomplete {
      * @throws IllegalArgumentException if prefix is null
      */
     public Term[] allMatches(String prefix) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        if (prefix == null) {
+            throw new IllegalArgumentException();
+        }
+        Term[] temp = new Term[length];
+        Term compared = new Term(prefix, prefix.length());
+        int compareResult;
+        int index = 0;
+        for (Term term : terms) {
+            compareResult = term.compareToByPrefixOrder(compared, prefix.length());
+            if (compareResult == 0) {
+                temp[index] = term;
+                index++;
+            }
+        }
+        if (index == 0) {
+            Term[] empty = new Term[0];
+            return empty;
+        }
+        Term[] sorted = Arrays.copyOfRange(temp, 0, index);
+        Arrays.sort(sorted, termComp.byReverseWeightOrder());
+        return sorted;
     }
 }
 

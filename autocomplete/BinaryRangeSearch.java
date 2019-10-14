@@ -1,7 +1,31 @@
 package autocomplete;
 
+import java.util.Arrays;
+
 public class BinaryRangeSearch implements Autocomplete {
-    // TODO: add fields as necessary
+    private int length;
+    private static Term[] sortedTerms;
+    private static TermComparators termComp;
+
+    private static int bsHelper(Term tested, int start, int end){
+        if (start > end) {//?????
+            return -1;
+        }
+        int mid = (start + end) / 2;  // start=end=0
+        int testResult = tested.compareTo(sortedTerms[mid]);
+        if (testResult == 0) {
+            return mid;
+        }
+        else if (testResult < 0) {
+            return bsHelper(tested, start, mid-1);
+        }
+        else {
+            return bsHelper(tested, mid+1, end);
+        }
+
+
+    }
+
 
     /**
      * Validates and stores the given array of terms.
@@ -10,8 +34,16 @@ public class BinaryRangeSearch implements Autocomplete {
      * @throws IllegalArgumentException if terms is null or contains null
      */
     public BinaryRangeSearch(Term[] terms) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        if (terms == null) {
+            throw new IllegalArgumentException();
+        }
+        else if (Arrays.asList(terms).contains(null)) {
+            throw new IllegalArgumentException();
+        }
+        Arrays.sort(terms, Term::compareTo);
+        this.sortedTerms = terms;
+        this.length = terms.length;
+        //throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
     }
 
     /**
@@ -19,7 +51,32 @@ public class BinaryRangeSearch implements Autocomplete {
      * @throws IllegalArgumentException if prefix is null
      */
     public Term[] allMatches(String prefix) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        if (prefix == null) {
+            throw new IllegalArgumentException();
+        }
+        Term tested = new Term(prefix, prefix.length());
+        int temp = bsHelper(tested, 0, length-1);
+        int left = -1;
+        int right = -1;
+        while (temp != -1) {
+            left = temp;
+            temp = bsHelper(tested, 0, temp-1);
+        }
+        temp = bsHelper(tested, 0, length-1);
+        while (temp != -1) {
+            right = temp;
+            temp = bsHelper(tested, temp+1, length-1);
+        }
+        if (left != -1 && right != -1) {
+            Term[] out = new Term[right-left + 1];
+            for (int i = left; i < right+1; i++) {
+                out[right-i] = sortedTerms[i];
+            }
+            Arrays.sort(out, termComp.byReverseWeightOrder());
+            return out;
+        }
+        Term[] empty = new Term[0];
+        return empty;
+        //return null?
     }
 }
