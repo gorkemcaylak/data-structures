@@ -8,7 +8,7 @@ public class BinaryRangeSearch implements Autocomplete {
     private static TermComparators termComp;
 
     private static int bsHelper(Term tested, int start, int end){
-        if (start > end) {//?????
+        if (start > end ) { //|| end < 1) {//?????
             return -1;
         }
         int mid = (start + end) / 2;  // start=end=0
@@ -70,7 +70,7 @@ public class BinaryRangeSearch implements Autocomplete {
         if (left != -1 && right != -1) {
             Term[] out = new Term[right-left + 1];
             for (int i = left; i < right+1; i++) {
-                out[right-i] = sortedTerms[i];
+                out[i-left] = sortedTerms[i];
             }
             Arrays.sort(out, termComp.byReverseWeightOrder());
             return out;

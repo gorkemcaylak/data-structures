@@ -20,6 +20,7 @@ public class LinearRangeSearch implements Autocomplete {
         else if (Arrays.asList(terms).contains(null)) {
             throw new IllegalArgumentException();
         }
+        //Arrays.sort(terms, Term::compareTo);
         this.terms = terms;
         this.length = terms.length;
     }

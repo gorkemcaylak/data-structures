@@ -55,6 +55,8 @@ public class BinaryRangeSearchTest {
 
     @Test
     public void testRandomized() {
+        assertTermsEqual(bAuto.allMatches("Dal"), lAuto.allMatches("Dal"));
+
         assertTermsEqual(bAuto.allMatches("İst"), lAuto.allMatches("İst"));
         assertTermsEqual(bAuto.allMatches("Cann"), lAuto.allMatches("Cann"));
 
@@ -65,7 +67,6 @@ public class BinaryRangeSearchTest {
 
         // assertTermsEqual(binaryAuto.allMatches("Da"), linearAuto.allMatches("Da"));
         assertTermsEqual(bAuto.allMatches("Dallas"), lAuto.allMatches("Dallas"));
-        assertTermsEqual(bAuto.allMatches("Dal"), lAuto.allMatches("Dal"));
         assertTermsEqual(bAuto.allMatches("Sqx"), lAuto.allMatches("Sqx"));
         assertTermsEqual(bAuto.allMatches("Pari"), lAuto.allMatches("Pari"));
 
