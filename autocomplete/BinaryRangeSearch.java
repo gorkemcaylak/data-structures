@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public class BinaryRangeSearch implements Autocomplete {
     private int length;
-    private static Term[] sortedTerms;
+    private Term[] sortedTerms;
     private static TermComparators termComp;
 
-    private static int bsHelper(Term tested, int start, int end){
-        if (start > end ) { //|| end < 1) {//?????
+    private int bsHelper(Term tested, int start, int end){
+        if (start > end) { //|| end < 1) {//?????
             return -1;
         }
         int mid = (start + end) / 2;  // start=end=0
-        int testResult = tested.compareTo(sortedTerms[mid]);
+        int testResult = tested.compareTo(this.sortedTerms[mid]);
         if (testResult == 0) {
             return mid;
         }
@@ -42,7 +42,7 @@ public class BinaryRangeSearch implements Autocomplete {
         }
         Arrays.sort(terms, Term::compareTo);
         this.sortedTerms = terms;
-        this.length = terms.length;
+        this.length = sortedTerms.length;
         //throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
     }
 
@@ -55,17 +55,17 @@ public class BinaryRangeSearch implements Autocomplete {
             throw new IllegalArgumentException();
         }
         Term tested = new Term(prefix, prefix.length());
-        int temp = bsHelper(tested, 0, length-1);
+        int temp = bsHelper(tested, 0, this.length-1);
         int left = -1;
         int right = -1;
         while (temp != -1) {
             left = temp;
             temp = bsHelper(tested, 0, temp-1);
         }
-        temp = bsHelper(tested, 0, length-1);
+        temp = bsHelper(tested, 0, this.length-1);
         while (temp != -1) {
             right = temp;
-            temp = bsHelper(tested, temp+1, length-1);
+            temp = bsHelper(tested, temp+1, this.length-1);
         }
         if (left != -1 && right != -1) {
             Term[] out = new Term[right-left + 1];

@@ -71,9 +71,12 @@ public class BinaryRangeSearchTest {
         assertTermsEqual(bAuto.allMatches("Pari"), lAuto.allMatches("Pari"));
 
         assertTermsEqual(bAuto.allMatches("Kalamanaamanakananamajja"), lAuto.allMatches("Kalamanaamanakananamajja"));
-        assertTermsEqual(bAuto.allMatches("Nic"), lAuto.allMatches("Nic"));
-        assertTermsEqual(bAuto.allMatches("Iz"), lAuto.allMatches("Iz"));
+        assertTermsEqual(bAuto.allMatches("Пл"), lAuto.allMatches("Пл"));
+        assertTermsEqual(bAuto.allMatches("东海岛"), lAuto.allMatches("东海岛"));
         assertTermsEqual(bAuto.allMatches("Berlin, "), lAuto.allMatches("Berlin, "));
+        assertTermsEqual(bAuto.allMatches("Z"), lAuto.allMatches("Z"));
+        assertTermsEqual(bAuto.allMatches("'s"), lAuto.allMatches("'s"));
+
 
     }
 
@@ -84,11 +87,11 @@ public class BinaryRangeSearchTest {
                 new Term("world", 0),
                 new Term("welcome", 0),
                 new Term("to", 0),
-                new Term("autocomplete", 0),
+                new Term("autocomplet", 0),
                 new Term("me", 0)
         };
         LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
-        Term[] expected = new Term[]{new Term("autocomplete", 0)};
+        Term[] expected = new Term[]{new Term("autocomplet", 0)};
         assertTermsEqual(expected, lrs.allMatches("auto"));
     }
 
@@ -139,9 +142,9 @@ public class BinaryRangeSearchTest {
         };
         LinearRangeSearch lrs = new LinearRangeSearch(moreTerms);
         BinaryRangeSearch brs = new BinaryRangeSearch(moreTerms);
-        Term[] expected = new Term[]{new Term("autocomp", 19), new Term("auu", 12), new Term("autobahn", 5), new Term("automatic", 2)};
-        assertTermsEqual(expected, lrs.allMatches("au"));
-        assertTermsEqual(brs.allMatches("au"), lrs.allMatches("au"));
+        Term[] expected = new Term[]{new Term("autocomp", 19), new Term("autobahn", 5), new Term("automatic", 2)};
+        assertTermsEqual(expected, lrs.allMatches("aut"));
+        assertTermsEqual(brs.allMatches("aut"), lrs.allMatches("aut"));
     }
 
     @Test

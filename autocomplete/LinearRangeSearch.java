@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class LinearRangeSearch implements Autocomplete {
     private int length;
-    private static Term[] terms;
+    private Term[] terms;
     private static TermComparators termComp;
 
     /**
