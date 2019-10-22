@@ -19,7 +19,7 @@ public class PrintHeapDemo {
         }
 
         for (int i = 1; i < heap.length; i++) {
-            System.out.printf("%.1f ", heap[i]);
+            System.out.printf("%d ", (int) heap[i]);
             if (i == itemsUntilNext) {
                 System.out.println();
                 level++;
@@ -67,24 +67,41 @@ public class PrintHeapDemo {
     public static void main(String[] args) {
         Integer[] example = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         ArrayHeapMinPQ minpq = new ArrayHeapMinPQ();
-        minpq.add("3ali", 3);
-        minpq.add("4veli", 4);
-        minpq.add("2deli", 2);
-        minpq.add("5ali", 5);
-        minpq.add("1veli", 1);
-        minpq.add("6deli", 6);
-        minpq.add("2ali", 2);
-        minpq.add("8veli", 8);
-        minpq.add("10deli", 10);
-
+        minpq.add("3ali", 9);
         double[] out = minpq.returnList();
         printSimpleHeapDrawing(out);
-
-        minpq.changePriority("1veli", 6);
+        minpq.add("4veli", 8);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("2deli", 6);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("5ali", 5);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("1veli", 4);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("6deli", 6);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("2ali", 2);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.add("8veli", 3);
         out = minpq.returnList();
         printSimpleHeapDrawing(out);
 
-        minpq.changePriority("1veli", 3); //fails - infinite loop
+        minpq.add("10deli", 2);
+
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+
+        minpq.changePriority("3ali", 1);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+
+        minpq.changePriority("1veli", 7); //fails - infinite loop
         out = minpq.returnList();
         printSimpleHeapDrawing(out);
         System.out.println(minpq.getSmallest());

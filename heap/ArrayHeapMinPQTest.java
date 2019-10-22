@@ -30,7 +30,17 @@ public class ArrayHeapMinPQTest {
         minpq.add("8veli", 8);
         minpq.add("10deli", 10);
         // String holder = minpq.getSmallest();
-        // minpq.removeSmallest();
+        assertEquals("1veli", minpq.removeSmallest());
+        minpq.changePriority("2ali", 7);
+        assertEquals("2deli", minpq.removeSmallest());
+        assertEquals("3ali", minpq.removeSmallest());
+        assertEquals(6, minpq.size());
+        minpq.add("3.5veli", 3.5);
+        assertEquals("3.5veli", minpq.removeSmallest());
+
+
+
+
         // minpq.removeSmallest();
 
 

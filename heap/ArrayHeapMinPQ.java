@@ -37,6 +37,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         PriorityNode temp = items.get(a);
         items.set(a, items.get(b));
         items.set(b, temp);
+        map.replace(this.items.get(a).hashCode(), a);
+        map.replace(this.items.get(b).hashCode(), b);
         /*
         if (!items.get(b).isValid()){
             items.remove(b);
@@ -64,21 +66,32 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         while (2*k <= length) {
             int left = 2*k;
             int right = 2*k+1;
+            double leftIsSmaller;
             double parentPriority = this.items.get(k).getPriority();
-            if (this.items.get(k * 2).getPriority()< parentPriority){
-                if (right<=length && this.items.get(left).getPriority() > this.items.get(right).getPriority()) {
+            if (2*k+1 > length) {
+                leftIsSmaller = 1.0;
+            }
+            else {
+                leftIsSmaller = this.items.get(right).getPriority() - this.items.get(left).getPriority();
+            }
+            if (leftIsSmaller >= 0) {
+                if (parentPriority > this.items.get(left).getPriority()) {
+                    swap(left, k);
+                    k = left;
+                }
+                else {
+                    return k;
+                }
+            }
+            else if (leftIsSmaller < 0) {
+                if (parentPriority > this.items.get(right).getPriority()) {
                     swap(right, k);
                     k = right;
                 }
                 else {
-                    swap(left, k);
-                    k = left;
+                    return k;
                 }
             }
-            else {
-                return k;
-            }
-
         }
         return k;
     }
@@ -171,7 +184,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         PriorityNode subject = items.get(subjectInd);
         subject.setPriority(priority);
         subjectInd = sink(swim(subjectInd));
-        map.replace(item.hashCode(), subjectInd);
+        //map.replace(item.hashCode(), subjectInd);
      }
 
     /**
