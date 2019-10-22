@@ -10,7 +10,7 @@ public class PrintHeapDemo {
      * is a heap starting at index 1. You're welcome to copy and paste code
      * from this method into your code with a citation.
      */
-    public static void printSimpleHeapDrawing(Object[] heap) {
+    public static void printSimpleHeapDrawing(double[] heap) {
         int depth = ((int) (Math.log(heap.length) / Math.log(2)));
         int level = 0;
         int itemsUntilNext = (int) Math.pow(2, level);
@@ -19,7 +19,7 @@ public class PrintHeapDemo {
         }
 
         for (int i = 1; i < heap.length; i++) {
-            System.out.printf("%d ", heap[i]);
+            System.out.printf("%.1f ", heap[i]);
             if (i == itemsUntilNext) {
                 System.out.println();
                 level++;
@@ -66,7 +66,56 @@ public class PrintHeapDemo {
 
     public static void main(String[] args) {
         Integer[] example = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-        printSimpleHeapDrawing(example);
-        printFancyHeapDrawing(example);
+        ArrayHeapMinPQ minpq = new ArrayHeapMinPQ();
+        minpq.add("3ali", 3);
+        minpq.add("4veli", 4);
+        minpq.add("2deli", 2);
+        minpq.add("5ali", 5);
+        minpq.add("1veli", 1);
+        minpq.add("6deli", 6);
+        minpq.add("2ali", 2);
+        minpq.add("8veli", 8);
+        minpq.add("10deli", 10);
+
+        double[] out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+
+        minpq.changePriority("1veli", 6);
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+
+        minpq.changePriority("1veli", 3); //fails - infinite loop
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        System.out.println(minpq.getSmallest());
+        System.out.println("null");
+
+
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+        minpq.removeSmallest();
+        out = minpq.returnList();
+        printSimpleHeapDrawing(out);
+
+        // printFancyHeapDrawing(example);
     }
 }
