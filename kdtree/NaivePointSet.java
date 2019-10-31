@@ -6,8 +6,8 @@ import java.util.List;
  * Naive nearest neighbor implementation using a linear scan.
  */
 public class NaivePointSet implements PointSet {
-    // TODO: add fields as necessary
-
+    List<Point> set;
+    int size;
     /**
      * Instantiates a new NaivePointSet with the given points.
      * @param points a non-null, non-empty list of points to include
@@ -15,8 +15,8 @@ public class NaivePointSet implements PointSet {
      *               after construction don't affect the point set)
      */
     public NaivePointSet(List<Point> points) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet; replace this with your code.");
+        set = points;
+        size = set.size();
     }
 
     /**
@@ -25,7 +25,21 @@ public class NaivePointSet implements PointSet {
      */
     @Override
     public Point nearest(double x, double y) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet; replace this with your code.");
+        if (size == 0) {
+            return null;
+        }
+        Point smallest = set.get(0);
+        Point temp;
+        double smallestDist = smallest.distanceSquaredTo(x, y);
+        double tempDist;
+        for (int i=1; i<size; i++) {
+            temp = set.get(i);
+            tempDist = temp.distanceSquaredTo(x, y);
+            if (tempDist < smallestDist) {
+                smallest = temp;
+                smallestDist = tempDist;
+            }
+        }
+        return smallest;
     }
 }
