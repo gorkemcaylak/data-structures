@@ -1,8 +1,13 @@
 package kdtree;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 
 public class KDTreePointSetTest {
     List<Point> pointList = List.of(
@@ -15,7 +20,11 @@ public class KDTreePointSetTest {
             new Point(0, 0),
             new Point(-1, -1),
             new Point(-111, 100),
-            new Point(30, -100)
+            new Point(2, -1),
+            new Point(2.1, -3),
+            new Point(2, 3.1),
+            new Point(30, 100),
+            new Point(1, 3)
             );
     PointSet pointSet = new NaivePointSet(pointList);
     PointSet kdPointSet = new KDTreePointSet(pointList);
@@ -52,4 +61,43 @@ public class KDTreePointSetTest {
 
 
     }
+
+    @Test
+    public void randomComparedTest() {
+        Point myPoint;
+        PointSet pointRandSet;
+        PointSet kdPointRandSet;
+        int seed = 373; // or your favorite number
+        Random random = new Random(seed);
+        List<Point> pointList2 = new ArrayList<>();
+        for (int i = 0; i < 1000000; i += 1) {
+            double x = random.nextDouble();
+            double y = random.nextDouble();
+            x *= 100;
+            x -= 50;
+            y *= 100;
+            y -= 50;
+            myPoint = new Point(x, y);
+            pointList2.add(myPoint);
+        }
+
+        pointRandSet = new NaivePointSet(pointList2);
+        kdPointRandSet = new KDTreePointSet(pointList2);
+
+        for (int i = 0; i < 1000; i += 1) {
+            double x = random.nextDouble();
+            x -= 50;
+            double y = random.nextDouble();
+            y -= 50;
+            assertEquals(pointRandSet.nearest(x, y), kdPointRandSet.nearest(x, y));
+        }
+
+
+
+
+
+
+
+
+        }
 }
