@@ -72,16 +72,20 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 return;
             }
         }
-        solutionWeight = distTo.get(next);
-        solutionList.add(0, next); //push front
-        prev = next;
-        while (!prev.equals(start)) {
-            prev = edgeTo.get(prev);
-            solutionList.add(0, prev); //push front
+        if (outcome == SolverOutcome.SOLVED) {
+            solutionWeight = distTo.get(next);
+            solutionList.add(0, next); //push front
+            prev = next;
+            while (!prev.equals(start)) {
+                prev = edgeTo.get(prev);
+                solutionList.add(0, prev); //push front
+            }
+            //outcome = SolverOutcome.SOLVED;
+            timeSpent = sw.elapsedTime();
         }
-        outcome = SolverOutcome.SOLVED;
-        timeSpent = sw.elapsedTime();
-
+        else {
+            outcome = SolverOutcome.UNSOLVABLE;
+        }
 
     }
 
