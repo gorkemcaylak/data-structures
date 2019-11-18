@@ -54,12 +54,12 @@ public class Rasterer {
         //            startTileY = numYTilesDepth - (endTileY - startTileY);
         //            endTileY = numYTilesDepth;
         //        }
-        if (depth == 0){
-            startTileX =0;
-            endTileX =2;
-            startTileY = 0;
-            endTileY =1;
-        }
+        //        if (depth == 0){
+        //            startTileX =0;
+        //            endTileX =2;
+        //            startTileY = 0;
+        //            endTileY =1;
+        //        }
 
 
         int yTiles = endTileY-startTileY;
