@@ -2,6 +2,10 @@ package huskymaps;
 
 import astar.AStarGraph;
 import astar.WeightedEdge;
+import autocomplete.Autocomplete;
+import autocomplete.BinaryRangeSearch;
+import kdtree.KDTreePointSet;
+import kdtree.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,13 +19,26 @@ import static huskymaps.utils.Spatial.greatCircleDistance;
 import static huskymaps.utils.Spatial.projectToX;
 import static huskymaps.utils.Spatial.projectToY;
 
+
 public class StreetMapGraph implements AStarGraph<Long> {
     private Map<Long, Node> nodes = new HashMap<>();
     private Map<Long, Set<WeightedEdge<Long>>> neighbors = new HashMap<>();
+    private KDTreePointSet kdTree;// = new KDTreePointSet(null);
+    private Autocomplete auto;// = new BinaryRangeSearch();
 
     public StreetMapGraph(String filename) {
         OSMGraphHandler.initializeFromXML(this, filename);
         // TODO
+       //   OSMGraphHandler.places; //PRIVATE!
+        kdTree = new KDTreePointSet(null);
+        for (HashMap.Entry<Long, Node> each : nodes.entrySet()){
+            if (neighbors.get(each.getKey()).isEmpty()) {//check
+                continue;
+            }
+            Node eachNode = each.getValue();
+            Point p = new Point(eachNode.id, projectToX(eachNode.lon(), eachNode.lat()), projectToY(eachNode.lon(), eachNode.lat()));
+            kdTree.add(p);
+        }
     }
 
     /**
@@ -34,7 +51,8 @@ public class StreetMapGraph implements AStarGraph<Long> {
         double x = projectToX(lon, lat);
         double y = projectToY(lon, lat);
         // Use x and y, not lon and lat, when working with Point instances
-        return 0;
+        Point result = kdTree.nearest(x, y);
+        return result.id();
     }
 
     /**
@@ -44,6 +62,9 @@ public class StreetMapGraph implements AStarGraph<Long> {
      * @return A <code>List</code> of full names of locations matching the <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
+
+
+
         return new LinkedList<>();
     }
 

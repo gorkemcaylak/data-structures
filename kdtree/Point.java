@@ -4,10 +4,12 @@ import java.util.Objects;
 
 public class Point {
 
+    private long id;
     private double x;
     private double y;
 
-    public Point(double x, double y) {
+    public Point(long id, double x, double y) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }
@@ -46,6 +48,9 @@ public class Point {
         return y;
     }
 
+    public long id() { return id; }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -66,6 +71,6 @@ public class Point {
 
     @Override
     public String toString() {
-        return String.format("Point x: %.10f, y: %.10f", x, y);
+        return String.format("Point ID: %d, x: %.10f, y: %.10f", id, x, y);
     }
 }

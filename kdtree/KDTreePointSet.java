@@ -67,6 +67,9 @@ public class KDTreePointSet implements PointSet {
 
     }
     private void create2Dtree(List<Point> points) {
+        if (points == null){
+            return;
+        }
         for (Point point : points) {
             add(point);
         }

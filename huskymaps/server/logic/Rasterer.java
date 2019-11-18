@@ -5,9 +5,7 @@ import huskymaps.params.RasterResult;
 
 import java.util.Objects;
 
-import static huskymaps.utils.Constants.MIN_X_TILE_AT_DEPTH;
-import static huskymaps.utils.Constants.MIN_Y_TILE_AT_DEPTH;
-import static huskymaps.utils.Constants.MIN_ZOOM_LEVEL;
+import static huskymaps.utils.Constants.*;
 
 /** Application logic for the RasterAPIHandler. */
 public class Rasterer {
@@ -31,10 +29,38 @@ public class Rasterer {
      * @return RasterResult
      */
     public static RasterResult rasterizeMap(RasterRequest request) {
-        System.out.println("Since you haven't implemented rasterizeMap, nothing is displayed in your browser.");
+       // System.out.println("Since you haven't implemented rasterizeMap, nothing is displayed in your browser.");
         // TODO
-        Tile[][] grid = null;
-        return new RasterResult(grid);
+        //System.out.println(request);
+//        double lonDiff = request.lrlon - request.ullon;
+//        double latDiff = request.ullat - request.lrlat;
+        int depth = request.depth;
+        double lonPerTile = LON_PER_TILE[depth];
+        double latPerTile = LAT_PER_TILE[depth];
+//        int numXTilesDepth = NUM_X_TILES_AT_DEPTH[depth];
+//        int numYTilesDepth = NUM_Y_TILES_AT_DEPTH[depth];
+        int startTileX = (int) ((request.ullon - ROOT_ULLON)/lonPerTile);
+        int endTileX = (int) ((request.lrlon - ROOT_ULLON)/lonPerTile)+1;
+        int startTileY = (int) ((ROOT_ULLAT - request.ullat)/latPerTile);
+        int endTileY = (int) ((ROOT_ULLAT - request.lrlat)/latPerTile)+1;
+
+        if (depth == 0){
+            startTileX =0;
+            endTileX =2;
+            startTileY = 0;
+            endTileY =1;
+        }
+
+
+        int yTiles = endTileY-startTileY;
+        int xTiles = endTileX-startTileX;
+        Tile[][] grid2d = new Tile[yTiles][xTiles];
+        for (int i = startTileX; i < endTileX; i++) {
+            for (int j = startTileY; j < endTileY; j++) {
+                grid2d[j-startTileY][i-startTileX] = new Tile(request.depth, i, j);
+            }
+        }
+        return new RasterResult(grid2d);
     }
 
     public static class Tile {
