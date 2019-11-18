@@ -29,21 +29,31 @@ public class Rasterer {
      * @return RasterResult
      */
     public static RasterResult rasterizeMap(RasterRequest request) {
-       // System.out.println("Since you haven't implemented rasterizeMap, nothing is displayed in your browser.");
-        // TODO
-        //System.out.println(request);
-//        double lonDiff = request.lrlon - request.ullon;
-//        double latDiff = request.ullat - request.lrlat;
         int depth = request.depth;
         double lonPerTile = LON_PER_TILE[depth];
         double latPerTile = LAT_PER_TILE[depth];
-//        int numXTilesDepth = NUM_X_TILES_AT_DEPTH[depth];
-//        int numYTilesDepth = NUM_Y_TILES_AT_DEPTH[depth];
+        int numXTilesDepth = NUM_X_TILES_AT_DEPTH[depth];
+        int numYTilesDepth = NUM_Y_TILES_AT_DEPTH[depth];
         int startTileX = (int) ((request.ullon - ROOT_ULLON)/lonPerTile);
         int endTileX = (int) ((request.lrlon - ROOT_ULLON)/lonPerTile)+1;
         int startTileY = (int) ((ROOT_ULLAT - request.ullat)/latPerTile);
         int endTileY = (int) ((ROOT_ULLAT - request.lrlat)/latPerTile)+1;
-
+        //        if (request.ullon - ROOT_ULLON < 0){
+        //            startTileX = 0;
+        //            endTileX += ROOT_ULLON - request.ullon;
+        //        }
+        //        if (ROOT_ULLAT - request.ullat < 0){
+        //            startTileY = 0;
+        //            endTileY += request.ullat - ROOT_ULLAT;
+        //        }
+        //        if (request.lrlon > ROOT_LRLON){
+        //            startTileX = numXTilesDepth - (endTileX - startTileX);
+        //            endTileX = numXTilesDepth;
+        //        }
+        //        if (request.lrlat < ROOT_LRLAT){
+        //            startTileY = numYTilesDepth - (endTileY - startTileY);
+        //            endTileY = numYTilesDepth;
+        //        }
         if (depth == 0){
             startTileX =0;
             endTileX =2;

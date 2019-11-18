@@ -4,6 +4,7 @@ import astar.AStarGraph;
 import astar.WeightedEdge;
 import autocomplete.Autocomplete;
 import autocomplete.BinaryRangeSearch;
+import autocomplete.Term;
 import kdtree.KDTreePointSet;
 import kdtree.Point;
 
@@ -22,21 +23,43 @@ import static huskymaps.utils.Spatial.projectToY;
 
 public class StreetMapGraph implements AStarGraph<Long> {
     private Map<Long, Node> nodes = new HashMap<>();
+    private Map<String, Node> nodesByName = new HashMap<>();
     private Map<Long, Set<WeightedEdge<Long>>> neighbors = new HashMap<>();
-    private KDTreePointSet kdTree;// = new KDTreePointSet(null);
-    private Autocomplete auto;// = new BinaryRangeSearch();
-
+    private KDTreePointSet kdTree = new KDTreePointSet(null);
+    private Autocomplete auto; // = new BinaryRangeSearch();
+    private Term[] names; // = new Term[10000];
     public StreetMapGraph(String filename) {
         OSMGraphHandler.initializeFromXML(this, filename);
-        // TODO
-       //   OSMGraphHandler.places; //PRIVATE!
-        kdTree = new KDTreePointSet(null);
+        int i=0;
+        for (Node each: nodes.values()){
+            if (each.name() == null) {
+                continue;
+            }
+            nodesByName.put(each.name(), each);
+            i++;
+        }
+        names = new Term[i];
+        int j = 0;
+        for (Node each: nodes.values()){
+            if (each.name() == null) {
+                continue;
+            }
+            Term newTerm = new Term(each.name(), each.importance());
+            names[j] = newTerm;
+            j++;
+        }
+        // if (j != i) System.out.println("somethings wrong!");
+
+
+        auto = new BinaryRangeSearch(names);
         for (HashMap.Entry<Long, Node> each : nodes.entrySet()){
             if (neighbors.get(each.getKey()).isEmpty()) {//check
                 continue;
             }
             Node eachNode = each.getValue();
-            Point p = new Point(eachNode.id, projectToX(eachNode.lon(), eachNode.lat()), projectToY(eachNode.lon(), eachNode.lat()));
+            double x = projectToX(eachNode.lon(), eachNode.lat());
+            double y = projectToY(eachNode.lon(), eachNode.lat());
+            Point p = new Point(eachNode.id, x, y);
             kdTree.add(p);
         }
     }
@@ -62,10 +85,12 @@ public class StreetMapGraph implements AStarGraph<Long> {
      * @return A <code>List</code> of full names of locations matching the <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-
-
-
-        return new LinkedList<>();
+        Term[] matches = auto.allMatches(prefix);
+        LinkedList<String> out = new LinkedList<>();
+        for (Term each : matches){
+            out.add(each.query());
+        }
+        return out;
     }
 
     /**
@@ -75,7 +100,13 @@ public class StreetMapGraph implements AStarGraph<Long> {
      * @return A list of locations whose name matches the <code>locationName</code>.
      */
     public List<Node> getLocations(String locationName) {
-        return new LinkedList<>();
+        Term[] matches = auto.allMatches(locationName);
+        LinkedList<Node> out = new LinkedList<>();
+        //Node node = new Node();
+        for (Term each : matches){
+            out.add(nodesByName.get(each.query()));
+        }
+        return out;
     }
 
     /** Returns a list of outgoing edges for V. Assumes V exists in this graph. */
