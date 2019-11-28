@@ -27,12 +27,13 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
      * search, computing everything necessary for all other methods to return
      * their results in constant time. The timeout is given in seconds.
      */
-    public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
+    public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) { //boolean option) {
         minPQ = new TreeMapMinPQ<>();
         solutionList = new LinkedList<>();
         edgeTo = new HashMap<>();
         distTo = new HashMap<>();
         sw = new Stopwatch();
+        //double timeout = 100;
         goal = end;
         minPQ.add(start, 0);
         distTo.put(start, 0.0);
@@ -72,20 +73,32 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 return;
             }
         }
-        if (outcome == SolverOutcome.SOLVED) {
-            solutionWeight = distTo.get(next);
-            solutionList.add(0, next); //push front
-            prev = next;
-            while (!prev.equals(start)) {
-                prev = edgeTo.get(prev);
-                solutionList.add(0, prev); //push front
+        solutionWeight = distTo.get(next);
+        solutionList.add(0, next); //push front
+        prev = next;
+        while (!prev.equals(start)) {
+            prev = edgeTo.get(prev);
+            if (prev.equals(start)) {
+                break;
             }
-            //outcome = SolverOutcome.SOLVED;
-            timeSpent = sw.elapsedTime();
+            solutionList.add(0, prev); //push front
         }
-        else {
-            outcome = SolverOutcome.UNSOLVABLE;
-        }
+        //outcome = SolverOutcome.SOLVED;
+        timeSpent = sw.elapsedTime();
+        // if (outcome == SolverOutcome.SOLVED) {
+        //            solutionWeight = distTo.get(next);
+        //            solutionList.add(0, next); //push front
+        //            prev = next;
+        //            while (!prev.equals(start)) {
+        //                prev = edgeTo.get(prev);
+        //                solutionList.add(0, prev); //push front
+        //            }
+        //            //outcome = SolverOutcome.SOLVED;
+        //            timeSpent = sw.elapsedTime();
+        //}
+        //        else {
+        //            outcome = SolverOutcome.UNSOLVABLE;
+        //        }
 
     }
 
