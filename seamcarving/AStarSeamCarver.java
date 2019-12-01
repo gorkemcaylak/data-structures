@@ -27,14 +27,11 @@ public class AStarSeamCarver implements SeamCarver {
         if (picture == null) {
             throw new NullPointerException("Picture cannot be null.");
         }
-
-
         this.picture = new Picture(picture);
 
         W = width();
         H = height();
-        System.out.println("W=" + W);
-        System.out.println("L=" + H);
+
 
     }
 
@@ -61,12 +58,12 @@ public class AStarSeamCarver implements SeamCarver {
     public double energy(int x, int y) {
 
 
-        int xNext = (x + 1) % W;
+        int xNext = (x + 1) % width();
 
         int rXNext = picture.get(xNext, y).getRed();
         int gXNext = picture.get(xNext, y).getGreen();
         int bXNext = picture.get(xNext, y).getBlue();
-        int xPrev = (x - 1 + W) % W;
+        int xPrev = (x - 1 + width()) % width();
 
         int rXPrev = picture.get(xPrev, y).getRed();
         int gXPrev = picture.get(xPrev, y).getGreen();
@@ -77,12 +74,12 @@ public class AStarSeamCarver implements SeamCarver {
         int bXDiff = bXNext - bXPrev;
         int xGrad = rXDiff * rXDiff + gXDiff * gXDiff + bXDiff * bXDiff;
 
-        int yNext = (y + 1) % H;
+        int yNext = (y + 1) % height();
 
         int rYNext = picture.get(x, yNext).getRed();
         int gYNext = picture.get(x, yNext).getGreen();
         int bYNext = picture.get(x, yNext).getBlue();
-        int yPrev = (y - 1 + H) % H;
+        int yPrev = (y - 1 + height()) % height();
 
         int rYPrev = picture.get(x, yPrev).getRed();
         int gYPrev = picture.get(x, yPrev).getGreen();
@@ -105,9 +102,9 @@ public class AStarSeamCarver implements SeamCarver {
         solverH = new AStarSolver<Pixel>(graphH, start, end, 100);
         List<Pixel> soln = solverH.solution();
         int N = soln.size();
-        int[] outV = new int[N]; //change to N-2 ??
-        for (int i=0; i<N; i++){
-            outV[i] = soln.get(i).y();
+        int[] outV = new int[width()]; //change to N-2 ??
+        for (int i=0; i<width(); i++){
+            outV[i] = soln.get(i+1).y();
         }
         return outV;
     }
@@ -119,9 +116,9 @@ public class AStarSeamCarver implements SeamCarver {
         solverV = new AStarSolver<Pixel>(graphV, start, end, 100);
         List<Pixel> soln = solverV.solution();
         int N = soln.size();
-        int[] outH = new int[N]; //change to N-2 ??
-        for (int i=0; i<N; i++) {
-            outH[i] = soln.get(i).x();
+        int[] outH = new int[height()]; //change to N-2 ??
+        for (int i=0; i<height(); i++) {
+            outH[i] = soln.get(i+1).x();
         }
         return outH;
     }
@@ -199,24 +196,23 @@ public class AStarSeamCarver implements SeamCarver {
 
         List<Pixel> verticalNeighbors() {
             List<Pixel> neighbors = new ArrayList<>();
-            if (eng == 500){
-                return neighbors;
-            }
+
             if (y == -1){ //vertical start node
-                for (int i=0; i<W; i++){
+                for (int i=0; i<width(); i++){
                     neighbors.add(new Pixel(i, 0));
                 }
             }
-            else if (y == H-1) { //vertical end node
+            else if (y == height()-1) { //vertical end node
                 //neighbors.add(new Pixel(x, y, 500)); //change to H! // put start node?
                 return neighbors;
             }
             else {
+                neighbors.add(new Pixel(x, y+1));
+
                 if (x >= 1) {
                     neighbors.add(new Pixel(x-1, y+1));
                 }
-                neighbors.add(new Pixel(x, y+1));
-                if (x <= W-2) {
+                if (x <= width()-2) {
                     neighbors.add(new Pixel(x+1, y+1));
                 }
             }
@@ -226,26 +222,25 @@ public class AStarSeamCarver implements SeamCarver {
 
         List<Pixel> horizontalNeighbors() {
             List<Pixel> neighbors = new ArrayList<>();
-            if (eng == 500){
-                return neighbors;
-            }
+
             if (x == -1){ //horizontal start node
-                for (int i=0; i<H; i++){
+                for (int i=0; i<height(); i++){
                     neighbors.add(new Pixel(0, i));
                 }
             }
-            else if (x == W-1){ //horizontal end node
+            else if (x == width()-1){ //horizontal end node
                 //neighbors.add(new Pixel(-1, -1)); //change to W!
                 //neighbors.add(new Pixel(x, y, 500)); //change to H! // put start node?
-
                 return neighbors;
             }
             else {
+                neighbors.add(new Pixel(x+1, y));
+
                 if (y >= 1) {
                     neighbors.add(new Pixel(x+1, y-1));
                 }
                 neighbors.add(new Pixel(x+1, y));
-                if (y <= H-2) {
+                if (y <= height()-2) {
                     neighbors.add(new Pixel(x+1, y+1));
                 }
             }
