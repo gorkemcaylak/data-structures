@@ -13,7 +13,9 @@ import java.util.Objects;
 
 public class AStarSeamCarver implements SeamCarver {
     private Picture picture;
-    private ShortestPathsSolver<Pixel> solver;
+    private ShortestPathsSolver<Pixel> solverV;
+    private ShortestPathsSolver<Pixel> solverH;
+
     private PixelGraph graphH;
     private PixelGraph graphV;
 
@@ -28,8 +30,12 @@ public class AStarSeamCarver implements SeamCarver {
 
 
         this.picture = new Picture(picture);
+
         W = width();
         H = height();
+        System.out.println("W=" + W);
+        System.out.println("L=" + H);
+
     }
 
     public Picture picture() {
@@ -96,38 +102,33 @@ public class AStarSeamCarver implements SeamCarver {
         Pixel start = new Pixel(-1, 0,  0);
         Pixel end = new Pixel(-1, -1,  0);
         graphH = new PixelGraph(true);
-        solver = new AStarSolver<Pixel>(graphH, start, end, 100);
-        List<Pixel> soln = solver.solution();
+        solverH = new AStarSolver<Pixel>(graphH, start, end, 100);
+        List<Pixel> soln = solverH.solution();
         int N = soln.size();
-        int[] out = new int[N]; //change to N-2 ??
+        int[] outV = new int[N]; //change to N-2 ??
         for (int i=0; i<N; i++){
-            out[i] = soln.get(i).y();
+            outV[i] = soln.get(i).y();
         }
-        return out;
-
-        //throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        return outV;
     }
 
     public int[] findVerticalSeam() {
         Pixel start = new Pixel(0, -1,  0);
         Pixel end = new Pixel(-1, -1,  0);
         graphV = new PixelGraph(false);
-        solver = new AStarSolver<Pixel>(graphV, start, end, 100);
-        List<Pixel> soln = solver.solution();
+        solverV = new AStarSolver<Pixel>(graphV, start, end, 100);
+        List<Pixel> soln = solverV.solution();
         int N = soln.size();
-        int[] out = new int[N]; //change to N-2 ??
+        int[] outH = new int[N]; //change to N-2 ??
         for (int i=0; i<N; i++) {
-            out[i] = soln.get(i).x();
+            outH[i] = soln.get(i).x();
         }
-        return out;
-        //throw new UnsupportedOperationException("Not implemented yet: replace this with your code.");
+        return outH;
     }
 
     /** Pixel Graph Class */
 
     private class PixelGraph implements AStarGraph<Pixel> {
-        //heuristics zero!
-        //put all start nodes into the pq?
         boolean horizontal;
 
         PixelGraph(boolean horizontal) {
@@ -165,7 +166,7 @@ public class AStarSeamCarver implements SeamCarver {
 
     /** Pixel Class **/
 
-    private class Pixel {
+    private final class Pixel {
 
 
         private int x;
@@ -198,14 +199,16 @@ public class AStarSeamCarver implements SeamCarver {
 
         List<Pixel> verticalNeighbors() {
             List<Pixel> neighbors = new ArrayList<>();
-
+            if (eng == 500){
+                return neighbors;
+            }
             if (y == -1){ //vertical start node
                 for (int i=0; i<W; i++){
                     neighbors.add(new Pixel(i, 0));
                 }
             }
             else if (y == H-1) { //vertical end node
-                // neighbors.add(new Pixel(-1, -1)); //change to H! // put start node?
+                //neighbors.add(new Pixel(x, y, 500)); //change to H! // put start node?
                 return neighbors;
             }
             else {
@@ -223,7 +226,9 @@ public class AStarSeamCarver implements SeamCarver {
 
         List<Pixel> horizontalNeighbors() {
             List<Pixel> neighbors = new ArrayList<>();
-
+            if (eng == 500){
+                return neighbors;
+            }
             if (x == -1){ //horizontal start node
                 for (int i=0; i<H; i++){
                     neighbors.add(new Pixel(0, i));
@@ -231,6 +236,8 @@ public class AStarSeamCarver implements SeamCarver {
             }
             else if (x == W-1){ //horizontal end node
                 //neighbors.add(new Pixel(-1, -1)); //change to W!
+                //neighbors.add(new Pixel(x, y, 500)); //change to H! // put start node?
+
                 return neighbors;
             }
             else {
